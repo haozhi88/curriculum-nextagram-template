@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.user import User
+from werkzeug.security import generate_password_hash
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -24,7 +25,7 @@ def create():
     # Fetch values from sign up form
     username = request.form.get('username')
     email = request.form.get('email')
-    password = request.form.get('password')
+    password = generate_password_hash(request.form.get('password'))
 
     # Create new user
     user = User(username=username, email=email, password=password)
