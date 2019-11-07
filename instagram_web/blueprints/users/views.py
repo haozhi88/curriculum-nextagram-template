@@ -21,15 +21,19 @@ def new():
 
 @users_blueprint.route('/', methods=['POST'])
 def create():
+    # Fetch values from sign up form
     username = request.form.get('username')
     email = request.form.get('email')
-    password = request.form.get('password')  
+    password = request.form.get('password')
+
+    # Create new user
     user = User(username=username, email=email, password=password)
-    user.save()  
-    string = f"username: {username}, email: {email}, password: {password}"
-    print(string)
-    flash(string, 'alert alert-primary')
-    return redirect(url_for('users.new'))
+    if user.save():
+        flash('New user created', 'alert alert-primary')
+        return redirect(url_for('home'))
+    else:
+        error_to_flash(user.errors)
+        return render_template('users/new.html', username=username, email=email)
 
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):

@@ -7,4 +7,6 @@ class User(BaseModel):
     password = pw.CharField(unique=False)
 
     def validate(self):
-        print("user validate")
+        user = User.get_or_none(User.username == self.username)
+        if user:
+            self.errors.append("Username has been chosen")
