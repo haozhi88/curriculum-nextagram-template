@@ -31,6 +31,7 @@ def create():
     user = User(username=username, email=email, password=password)
     if user.save():
         flash('New user created', 'alert alert-primary')
+        print("successful")
         return redirect(url_for('home'))
     else:
         error_to_flash(user.errors)
