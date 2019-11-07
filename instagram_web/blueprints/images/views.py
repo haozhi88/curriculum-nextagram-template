@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template
 
 
 users_blueprint = Blueprint('users',
                             __name__,
                             template_folder='templates')
+
 
 @users_blueprint.route('/new', methods=['GET'])
 def new():
@@ -12,11 +13,7 @@ def new():
 
 @users_blueprint.route('/', methods=['POST'])
 def create():
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
-    print(f"username: {username}, email: {email}, password: {password}")
-    return render_template('users/new.html')
+    pass
 
 
 @users_blueprint.route('/<username>', methods=["GET"])
