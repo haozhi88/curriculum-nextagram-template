@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask_login import current_user
 from models.user import User
 from werkzeug.security import generate_password_hash
 
@@ -46,7 +47,8 @@ def index():
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 def edit(id):
-    session_id = session.get('id')
+    # session_id = session.get('id') # method 1: manual
+    session_id = current_user.get_id() # method 2: flask-login
     if session_id:
         user = User.get_or_none(User.id==id)
         if user and session_id==user.id:
