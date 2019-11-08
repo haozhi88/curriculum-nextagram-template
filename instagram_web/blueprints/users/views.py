@@ -26,12 +26,15 @@ def create():
     # Fetch values from sign up form
     username = request.form.get('username')
     email = request.form.get('email')
-    password = generate_password_hash(request.form.get('password'))
+    password = request.form.get('password')
+
+    # Perform validation
 
     # Create new user
+    password = generate_password_hash(password)
     user = User(username=username, email=email, password=password)
     if user.save():
-        flash('New user created', 'alert alert-primary')
+        flash('New user created', 'alert alert-success')
         return redirect(url_for('home'))
     else:
         error_to_flash(user.errors)
@@ -54,7 +57,7 @@ def edit(id):
         if user and session_id==user.id:
             username=user.username
             email=user.email
-            return render_template('users/edit.html', username=username, email=email, id=id)            
+            return render_template('users/edit.html', username=username, email=email, id=id)
         else:
             flash('Unauthorized user', 'alert alert-danger')
             return redirect(url_for('home'))
@@ -64,4 +67,28 @@ def edit(id):
 
 @users_blueprint.route('/<id>', methods=['POST'])
 def update(id):
-    pass
+    # Fetch values from sign up form
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    # Perform validation
+
+    # Check for authorized user
+    user = User.get_or_none(User.id==id)
+    if user.id == current_user.id:
+        user.username = username
+        user.email = email
+        user.password = generate_password_hash(password)
+        if user.save():
+            flash('Update successful', 'alert alert-success')
+            return redirect(url_for('users.edit', id=id))
+        else:
+            flash('Update failed', 'alert alert-danger')
+            error_to_flash(user.errors)
+            return render_template('users/edit.html', username=username, email=email, id=id)
+    else:
+        print(f"error user name: {user.username}, user id: {user.id}, current_user name: {current_user.username}, current_user id: {current_user.id}")
+        flash('Unauthorized user', 'alert alert-danger')
+        return render_template('users/edit.html', username=username, email=email, id=id)
+

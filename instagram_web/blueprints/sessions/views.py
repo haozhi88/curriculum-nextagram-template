@@ -33,12 +33,14 @@ def create():
         if result:
             # session['id'] = user.id # method 1: manual
             login_user(user) # method 2: flask-login
-            flash('Successfully logged in', 'alert alert-primary')
+            flash('Successfully logged in', 'alert alert-success')
+            return redirect(url_for('home'))
         else:
             flash('Incorrect password', 'alert alert-danger')
+            return render_template('/sessions/new.html', username=username)
     else:
         flash('User not exist', 'alert alert-danger')
-    return redirect(url_for('home'))
+        return render_template('/sessions/new.html', username=username)
 
 @sessions_blueprint.route('/delete', methods=['GET'])
 def destroy():
