@@ -20,5 +20,7 @@ def internal_server_error(e):
 
 @app.route("/")
 def home():
+    # from flask import session
+    # breakpoint()
     return render_template('home.html')
 

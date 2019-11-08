@@ -17,9 +17,13 @@
     {% endassets %} {% assets "home_js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %} {% block header %} {% endblock %}
-
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"
+    ></script>
     <title>
-      {% block title %} {% endblock %}NEXTAGRAM
+      NEXTAGRAM: {% block title %} {% endblock %}
     </title>
   </head>
   <body>
@@ -45,12 +49,27 @@
               >Home <span class="sr-only">(current)</span></a
             >
           </li>
+          {% if session['id'] %}
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              href="{{ url_for('users.edit', id=session['id']) }}"
+              >Edit Profile</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('sessions.destroy') }}"
+              >Sign Out</a
+            >
+          </li>
+          {% else %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('users.new') }}">Sign Up</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('sessions.new') }}">Sign In</a>
           </li>
+          {% endif %}
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input

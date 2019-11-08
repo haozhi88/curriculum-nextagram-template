@@ -1,8 +1,8 @@
-{% extends "_layout.html" %} {% block title %}Sign up{% endblock %} {% block
-header %} {% endblock %} {% block content %}
-<h3>Sign Up</h3>
+{% extends "_layout.html" %} {% block title %}Edit Profile for {{ username }}{%
+endblock %} {% block header %} {% endblock %} {% block content %}
+<h3>Edit Profile</h3>
 <div class="container">
-  <form>
+  <form action="{{ url_for('users.update', id=id) }}" method="POST">
     <!-- Username -->
     <div class="form-group">
       <label for="username-input">Username</label>
@@ -12,6 +12,7 @@ header %} {% endblock %} {% block content %}
         id="username-input"
         name="username"
         placeholder="Enter username"
+        value="{{ username }}"
       />
     </div>
 
@@ -24,6 +25,7 @@ header %} {% endblock %} {% block content %}
         id="email-input"
         name="email"
         placeholder="Enter email"
+        value="{{ email }}"
       />
     </div>
 
@@ -35,12 +37,12 @@ header %} {% endblock %} {% block content %}
         class="form-control"
         id="password-input"
         name="password"
-        placeholder="Enter password"
+        placeholder="Enter new password"
       />
     </div>
 
     <!-- Sign Up -->
-    <button type="submit" class="btn btn-primary">Sign up</button>
+    <button type="submit" class="btn btn-primary">Update</button>
   </form>
 </div>
 

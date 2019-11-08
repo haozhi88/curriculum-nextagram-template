@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -24,30 +24,28 @@ def new():
 def create():
     # Fetch values from sign in form
     username = request.form.get('username')
-    password = generate_password_hash(request.form.get('password'))
-
+    password = request.form.get('password')
     user = User.get_or_none(User.username == username)
     if user:
-        print("user exist")
-        print(f"input pw: {password}")
-        print(f"user pw: {user.password}")
-        result = check_password_hash(password, user.password)
+        # check_password_hash(arg1: hashed_pw, arg2: pw_string)
+        result = check_password_hash(user.password, password)
         if result:
-            print(f"result is true")
+            session['id'] = user.id
+            flash('Successfully logged in', 'alert alert-primary')
         else:
-            print(f"result is false")
+            flash('Incorrect password', 'alert alert-danger')
     else:
-        print("user not exist")
-
+        flash('User not exist', 'alert alert-danger')
     return redirect(url_for('home'))
 
-    # Create new user
-    # user = User(username=username, email=email, password=password)
-    # if user.save():
-    #     flash('New user created', 'alert alert-primary')
-    #     return redirect(url_for('home'))
-    # else:
-    #     error_to_flash(user.errors)
-    #     return render_template('users/new.html', username=username, email=email)
+@sessions_blueprint.route('/delete', methods=['GET'])
+def destroy():
+    session.pop('id', None)
+    flash('Successfully logged out', 'alert alert-primary') 
+    return redirect(url_for('home'))
+
+# <form action="{{ url_for('sessions.destroy') }}" method="POST">
+#     <input class="nav-link" value="Sign Out" type="submit" />
+# </form>
 
 

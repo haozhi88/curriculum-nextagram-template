@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from models.user import User
 from werkzeug.security import generate_password_hash
 
@@ -31,7 +31,6 @@ def create():
     user = User(username=username, email=email, password=password)
     if user.save():
         flash('New user created', 'alert alert-primary')
-        print("successful")
         return redirect(url_for('home'))
     else:
         error_to_flash(user.errors)
@@ -47,7 +46,19 @@ def index():
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 def edit(id):
-    pass
+    session_id = session.get('id')
+    if session_id:
+        user = User.get_or_none(User.id==id)
+        if user and session_id==user.id:
+            username=user.username
+            email=user.email
+            return render_template('users/edit.html', username=username, email=email, id=id)            
+        else:
+            flash('Unauthorized user', 'alert alert-danger')
+            return redirect(url_for('home'))
+    else:
+        flash('Not logged in', 'alert alert-danger')
+        return redirect(url_for('home'))
 
 @users_blueprint.route('/<id>', methods=['POST'])
 def update(id):
