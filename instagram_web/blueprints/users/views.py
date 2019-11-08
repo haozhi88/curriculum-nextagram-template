@@ -50,8 +50,8 @@ def index():
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 def edit(id):
-    # session_id = session.get('id') # method 1: manual
-    session_id = current_user.get_id() # method 2: flask-login
+    # session_id = session.get('id') # flask-session
+    session_id = current_user.get_id() # flask-login
     if session_id:
         user = User.get_or_none(User.id==id)
         if user and session_id==user.id:

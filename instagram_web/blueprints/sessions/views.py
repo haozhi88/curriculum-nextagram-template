@@ -31,8 +31,8 @@ def create():
         # check_password_hash(arg1: hashed_pw, arg2: pw_string)
         result = check_password_hash(user.password, password)
         if result:
-            # session['id'] = user.id # method 1: manual
-            login_user(user) # method 2: flask-login
+            # session['id'] = user.id # flask-session
+            login_user(user) # flask-login
             flash('Successfully logged in', 'alert alert-success')
             return redirect(url_for('home'))
         else:
@@ -44,8 +44,8 @@ def create():
 
 @sessions_blueprint.route('/delete', methods=['GET'])
 def destroy():
-    # session.pop('id', None) # method 1: manual
-    logout_user() # method 2: flask-login
+    # session.pop('id', None) # flask-session
+    logout_user() # flask-login
     flash('Successfully logged out', 'alert alert-warning') 
     return redirect(url_for('home'))
 

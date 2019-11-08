@@ -2,7 +2,7 @@
 header %} {% endblock %} {% block content %}
 <h3>Sign Up</h3>
 <div class="container">
-  <form>
+  <form action="{{ url_for('users.create') }}" method="POST">
     <!-- Username -->
     <div class="form-group">
       <label for="username-input">Username</label>
