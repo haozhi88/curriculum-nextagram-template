@@ -3,6 +3,9 @@ header %} {% endblock %} {% block content %}
 <h3>Sign In</h3>
 <div class="container">
   <form action="{{ url_for('sessions.create') }}" method="POST">
+    <!-- CSRF Protection -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
     <!-- Username -->
     <div class="form-group">
       <label for="username-input">Username</label>

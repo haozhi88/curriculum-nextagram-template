@@ -6,6 +6,9 @@ block header %} {% endblock %} {% block content %}
     action="{{ url_for('users.update', id=current_user.get_id()) }}"
     method="POST"
   >
+    <!-- CSRF Protection -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
     <!-- Username -->
     <div class="form-group">
       <label for="username-input">Username</label>
