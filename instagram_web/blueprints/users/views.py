@@ -87,8 +87,7 @@ def update(id):
             flash('Update failed', 'alert alert-danger')
             error_to_flash(user.errors)
             return render_template('users/edit.html', username=username, email=email, id=id)
-    else:
-        print(f"error user name: {user.username}, user id: {user.id}, current_user name: {current_user.username}, current_user id: {current_user.id}")
+    else:        
         flash('Unauthorized user', 'alert alert-danger')
         return render_template('users/edit.html', username=username, email=email, id=id)
 

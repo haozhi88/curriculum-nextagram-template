@@ -1,8 +1,1 @@
-Sign up page
-
-1. CSRF protection
-2. Email and password validation
-
-Sign in page
-
-1.
+1. Sign up, sign in and edit userprofile validation for username, email, password
