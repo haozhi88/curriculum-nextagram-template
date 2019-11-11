@@ -1,9 +1,10 @@
 {% extends "_layout.html" %} {% block title %}{{ user.username }}'s profile{%
 endblock %} {% block header %} {% endblock %} {% block content %}
-<div class="container">
+<div class="container-fluid">
+  <!-- User profile -->
   <div class="row">
-    <!-- User profile picture -->
-    <div class="col-4">
+    <!-- Picture -->
+    <div class="col-2">
       <div class="container">
         <div class="row mt-3 justify-content-center">
           <img
@@ -16,10 +17,24 @@ endblock %} {% block header %} {% endblock %} {% block content %}
       </div>
     </div>
 
-    <!-- User profile details -->
-    <div class="col-8">
+    <!-- Details -->
+    <div class="col-10 mt-3">
       <h3>Welcome to {{ user.username }}'s page!</h3>
     </div>
+  </div>
+
+  <!-- User images -->
+  <div class="row mt-2">
+    {% for image in images %}
+    <div class="col-4 mt-4">
+      <img
+        src="{{ image.image_url }}"
+        alt="profile picture"
+        class="img-fluid"
+        style="width: 100%; height: 35vh; object-fit: cover;"
+      />
+    </div>
+    {%endfor%}
   </div>
 </div>
 

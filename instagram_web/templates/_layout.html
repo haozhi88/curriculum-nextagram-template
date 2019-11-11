@@ -101,19 +101,21 @@
     {% endif %} {% endwith %}
 
     <!-- Body container -->
-    <div class="container">
+    <div class="container-fluid">
       <!-- Block  -->
       {% block content %} {% endblock %}
 
       <!-- Footer -->
-      <footer>
-        Made with &hearts; at
-        <a
-          target="_blank"
-          href="https://www.nextacademy.com/?utm_source=github&utm_medium=student-challenge&utm_campaign=flask-nextagram"
-          >NEXT Academy</a
-        >
-      </footer>
+      <div class="mt-3">
+        <footer>
+          Made with &hearts; at
+          <a
+            target="_blank"
+            href="https://www.nextacademy.com/?utm_source=github&utm_medium=student-challenge&utm_campaign=flask-nextagram"
+            >NEXT Academy</a
+          >
+        </footer>
+      </div>
     </div>
   </body>
 </html>

@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from flask_login import current_user
 from helpers import s3
 from models.user import User
+from models.image import Image
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
@@ -71,10 +72,6 @@ def create():
         error_to_flash(user.errors)
         return render_template('users/new.html', username=username, email=email)
 
-# @users_blueprint.route('/<username>', methods=["GET"])
-# def show_by_username(username):
-#     return render_template('users/show.html')
-
 def show_profile(id_or_username, is_profile):
     # TODO: for private profile, need to get session and check current user id
 
@@ -86,7 +83,9 @@ def show_profile(id_or_username, is_profile):
     
     # Render page if user exist
     if user:
-        return render_template('users/show.html', user=user)
+        # Get list of images
+        images = user.images
+        return render_template('users/show.html', user=user, images=images)
     else:
         flash('User not exist', 'alert alert-danger')
         return redirect(url_for('home'))  
@@ -184,16 +183,13 @@ def uploadimage(id):
         if file and allowed_file(file.filename):
             file.filename = secure_filename(file.filename)
             output   	  = upload_file_to_s3(file, cfg.S3_BUCKET)
-            print(f"filename: {file.filename}")
-            print(f"output: {output}")
             user.image_path = file.filename
             if user.save():
                 flash('Upload successful', 'alert alert-success')
                 return redirect(url_for('users.edit', id=id))
             else:
-                flash('Upload failed', 'alert alert-danger')
                 error_to_flash(user.errors)
                 return redirect(url_for('users.newimage', id=id))
-        else:
-            flash('Upload failed', 'alert alert-danger')
-            return redirect(url_for('users.newimage', id=id))
+
+    flash('Upload failed', 'alert alert-danger')
+    return redirect(url_for('users.newimage', id=id))
