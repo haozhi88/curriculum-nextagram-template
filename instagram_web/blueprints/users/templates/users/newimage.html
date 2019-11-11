@@ -1,6 +1,6 @@
 {% extends "_layout.html" %} {% block title %}Upload profile picture{% endblock
 %} {% block header %} {% endblock %} {% block content %}
-<h3>Upload Profile Picture</h3>
+<h3>Upload Profile Picture for {{ current_user.username }}</h3>
 <div class="container">
   <div class="row mt-3 justify-content-center">
     <div class="card">
@@ -23,7 +23,16 @@
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       </div>
       <div class="row"><input type="file" name="user_file" /></div>
-      <div class="row"><button type="submit">Upload</button></div>
+      <!-- <div class="form-group">
+        <div class="custom-file">
+          <input type="file" class="custom-file-input" name="profile-picture" />
+          <label class="custom-file-label" for="image">Select image...</label>
+        </div>
+      </div> -->
+
+      <div class="row mt-3">
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </div>
     </form>
   </div>
 </div>

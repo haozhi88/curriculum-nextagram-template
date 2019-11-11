@@ -1,5 +1,10 @@
 import os
 
+S3_BUCKET                 = os.environ.get("S3_BUCKET_NAME")
+S3_KEY                    = os.environ.get("S3_ACCESS_KEY")
+S3_SECRET                 = os.environ.get("S3_SECRET_ACCESS_KEY")
+S3_LOCATION               = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
+ALLOWED_IMAGE_EXTENSIONS  = {'png', 'jpg', 'jpeg', 'gif'}
 
 class Config(object):
     DEBUG = False
@@ -7,11 +12,7 @@ class Config(object):
     CSRF_ENABLED = True
     SECRET_KEY = os.environ.get(
         'SECRET_KEY') or os.urandom(32)
-    S3_BUCKET                 = os.environ.get("S3_BUCKET_NAME")
-    S3_KEY                    = os.environ.get("S3_ACCESS_KEY")
-    S3_SECRET                 = os.environ.get("S3_SECRET_ACCESS_KEY")
-    S3_LOCATION               = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024 # restrict content to 16MB
+    MAX_CONTENT_LENGTH = 4 * 1024 * 1024 # restrict content to 16MB
 
 class ProductionConfig(Config):
     DEBUG = False
@@ -34,7 +35,5 @@ class TestingConfig(Config):
     DEBUG = True
     ASSETS_DEBUG = True
 
-S3_BUCKET                 = os.environ.get("S3_BUCKET_NAME")
-S3_KEY                    = os.environ.get("S3_ACCESS_KEY")
-S3_SECRET                 = os.environ.get("S3_SECRET_ACCESS_KEY")
-S3_LOCATION               = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET)
+
+

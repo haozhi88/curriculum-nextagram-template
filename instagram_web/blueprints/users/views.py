@@ -41,11 +41,9 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
 
     return "{}{}".format(cfg.S3_LOCATION, file.filename)
 
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-
 def allowed_file(filename):
     return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+           filename.rsplit('.', 1)[1].lower() in cfg.ALLOWED_IMAGE_EXTENSIONS
 
 """""""""""""""""""""""""""""""""
 Route functions
@@ -136,7 +134,7 @@ def uploadimage(id):
     if user.id == current_user.id:
         if "user_file" not in request.files:
             flash('No user_file key in request.files', 'alert alert-danger')
-            return redirect(url_for('users.newimage'))
+            return redirect(url_for('users.newimage', id=id))
 
         file    = request.files["user_file"]
 
@@ -152,7 +150,7 @@ def uploadimage(id):
 
         if file.filename == "":
             flash('Please select a file', 'alert alert-danger')
-            return redirect(url_for('users.newimage'))
+            return redirect(url_for('users.newimage', id=id))
 
         if file and allowed_file(file.filename):
             file.filename = secure_filename(file.filename)
@@ -166,7 +164,7 @@ def uploadimage(id):
             else:
                 flash('Upload failed', 'alert alert-danger')
                 error_to_flash(user.errors)
-                return redirect(url_for('users.newimage'))
+                return redirect(url_for('users.newimage', id=id))
         else:
             flash('Upload failed', 'alert alert-danger')
-            return redirect(url_for('users.newimage'))
+            return redirect(url_for('users.newimage', id=id))
