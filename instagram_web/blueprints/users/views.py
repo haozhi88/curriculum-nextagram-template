@@ -1,7 +1,10 @@
+from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user
+from helpers import s3
 from models.user import User
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 
 users_blueprint = Blueprint('users',
                             __name__,
@@ -13,6 +16,35 @@ Others
 def error_to_flash(errors):
     for error in errors:
         flash(error, 'alert alert-danger')
+
+def upload_file_to_s3(file, bucket_name, acl="public-read"):
+    """
+    Docs: http://boto3.readthedocs.io/en/latest/guide/s3.html
+    """
+
+    try:
+
+        s3.upload_fileobj(
+            file,
+            bucket_name,
+            file.filename,
+            ExtraArgs={
+                "ACL": acl,
+                "ContentType": file.content_type
+            }
+        )
+
+    except Exception as e:
+        print("Something Happened: ", e)
+        return e
+
+    return "{}{}".format(app.config["S3_LOCATION"], file.filename)
+
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 """""""""""""""""""""""""""""""""
 Route functions
@@ -91,3 +123,41 @@ def update(id):
         flash('Unauthorized user', 'alert alert-danger')
         return render_template('users/edit.html', username=username, email=email, id=id)
 
+@users_blueprint.route('/newimage', methods=['GET'])
+def newimage():
+    return render_template('users/newimage.html')
+
+@users_blueprint.route('/newimage', methods=['POST'])
+def uploadimage():
+    
+    if "user_file" not in request.files:
+        flash('No user_file key in request.files', 'alert alert-danger')
+        return redirect(url_for('home'))
+
+    file    = request.files["user_file"]
+
+    """
+        These attributes are also available
+
+        file.filename               # The actual name of the file
+        file.content_type
+        file.content_length
+        file.mimetype
+
+    """
+
+    if file.filename == "":
+        flash('Please select a file', 'alert alert-danger')
+        return redirect(url_for('home'))
+
+    print(f"filename: {file.filename}")
+
+    if file and allowed_file(file.filename):
+        file.filename = secure_filename(file.filename)
+        output   	  = upload_file_to_s3(file, app.config["S3_BUCKET"])
+        flash('Upload successful', 'alert alert-success')
+        return redirect(url_for('home'))
+
+    else:
+        flash('Upload failed', 'alert alert-danger')
+        return redirect(url_for('home'))

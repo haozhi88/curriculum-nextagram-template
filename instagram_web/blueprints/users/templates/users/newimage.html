@@ -1,0 +1,26 @@
+{% extends "_layout.html" %} {% block title %}Upload profile picture{% endblock
+%} {% block header %} {% endblock %} {% block content %}
+<h3>Upload Profile Picture</h3>
+<div class="container drawline">
+  <div class="row mt-3 justify-content-center drawline2">
+    <div class="card" style="width: 50vh;">
+      <img src="..." class="card-img-top" alt="..." />
+    </div>
+  </div>
+  <div class="row mt-3 justify-content-center drawline2">
+    <form action="{{ url_for('users.uploadimage') }}" method="POST" enctype="multipart/form-data">
+
+    <!-- CSRF Protection -->
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    
+    <label for="user_file">Upload Your File</label>
+    <br></br>
+    <input type="file" name="user_file">
+    <br></br>
+    <button type="submit">Upload</button>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}
