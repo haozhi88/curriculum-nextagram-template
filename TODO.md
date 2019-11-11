@@ -4,8 +4,13 @@
 3. Upload profile image
    -How to handle same file name on AWS? Need to rename before upload?
    -How to preview image after selecting file?
-4. Upload images
-5. View images
+4. View images
+   -Create images model: user_id (as foreign_key), image_path
+   -Create html page to display images of any user
+   -Create html page to display images of current user
+5. Upload images
+   -Create html page to upload image of current user
+   -Add field for users model: private (default=False)
    11/12
 6. Payment gateway -> Brain tree
 7. Send email -> Sendgrid

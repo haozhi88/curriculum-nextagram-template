@@ -71,9 +71,38 @@ def create():
         error_to_flash(user.errors)
         return render_template('users/new.html', username=username, email=email)
 
-@users_blueprint.route('/<username>', methods=["GET"])
-def show(username):
-    pass
+# @users_blueprint.route('/<username>', methods=["GET"])
+# def show_by_username(username):
+#     return render_template('users/show.html')
+
+def show_profile(id_or_username, is_profile):
+    # TODO: for private profile, need to get session and check current user id
+
+    # Get user by id or username
+    if id_or_username.isdigit():
+        user = User.get_or_none(User.id==id_or_username)
+    else:
+        user = User.get_or_none(User.username==id_or_username)
+    
+    # Render page if user exist
+    if user:
+        return render_template('users/show.html', user=user)
+    else:
+        flash('User not exist', 'alert alert-danger')
+        return redirect(url_for('home'))  
+
+@users_blueprint.route('/<id_or_username>', methods=["GET"])
+def show(id_or_username):
+    return show_profile(id_or_username, False) 
+
+@users_blueprint.route('/profile', methods=["GET"])
+def show_myprofile():
+    session_id = current_user.get_id() # flask-login
+    if session_id:
+        return show_profile(str(session_id), True)
+    else:
+        flash('Not logged in', 'alert alert-danger')
+        return redirect(url_for('home'))
 
 @users_blueprint.route('/', methods=["GET"])
 def index():

@@ -23,7 +23,7 @@
       crossorigin="anonymous"
     ></script>
     <title>
-      NEXTAGRAM: {% block title %} {% endblock %}
+      NEXTAGRAM | {% block title %} {% endblock %}
     </title>
   </head>
   <body>
@@ -50,6 +50,11 @@
             >
           </li>
           {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('users.show_myprofile') }}"
+              >My Profile</a
+            >
+          </li>
           <li class="nav-item">
             <a
               class="nav-link"
