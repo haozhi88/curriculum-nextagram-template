@@ -2,54 +2,77 @@
 block header %} {% endblock %} {% block content %}
 <h3>Edit Profile for {{ username }}</h3>
 <div class="container">
-  <form
-    action="{{ url_for('users.update', id=current_user.get_id()) }}"
-    method="POST"
-  >
-    <!-- CSRF Protection -->
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-
-    <!-- Username -->
-    <div class="form-group">
-      <label for="username-input">Username</label>
-      <input
-        type="text"
-        class="form-control"
-        id="username-input"
-        name="username"
-        placeholder="Enter username"
-        value="{{ username }}"
-      />
+  <div class="row">
+    <!-- User profile picture -->
+    <div class="col-4">
+      <div class="container">
+        <div class="row mt-3 justify-content-center">
+          <img
+            src="https://next-curriculum-instagram.s3.amazonaws.com/profile-placeholder.jpg"
+            alt="profile picture"
+            class="img-fluid profile-picture-show"
+          />
+        </div>
+        <div class="row mt-3 justify-content-center">
+          <button type="submit" class="btn btn-primary">
+            Change profile picture
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Email -->
-    <div class="form-group">
-      <label for="email-input">Email</label>
-      <input
-        type="email"
-        class="form-control"
-        id="email-input"
-        name="email"
-        placeholder="Enter email"
-        value="{{ email }}"
-      />
-    </div>
+    <!-- User profile details -->
+    <div class="col-8">
+      <form
+        action="{{ url_for('users.update', id=current_user.get_id()) }}"
+        method="POST"
+      >
+        <!-- CSRF Protection -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 
-    <!-- Password -->
-    <div class="form-group">
-      <label for="password-input">Password</label>
-      <input
-        type="password"
-        class="form-control"
-        id="password-input"
-        name="password"
-        placeholder="Enter new password"
-      />
-    </div>
+        <!-- Username -->
+        <div class="form-group">
+          <label for="username-input">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username-input"
+            name="username"
+            placeholder="Enter username"
+            value="{{ username }}"
+          />
+        </div>
 
-    <!-- Update -->
-    <button type="submit" class="btn btn-primary">Update</button>
-  </form>
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email-input">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email-input"
+            name="email"
+            placeholder="Enter email"
+            value="{{ email }}"
+          />
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password-input">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password-input"
+            name="password"
+            placeholder="Enter new password"
+          />
+        </div>
+
+        <!-- Update -->
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+  </div>
 </div>
 
 {% endblock %}

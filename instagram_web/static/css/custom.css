@@ -19,3 +19,19 @@ footer a {
   text-decoration: none;
   color: #303030;
 }
+
+.drawline {
+  border: 1px solid red;
+}
+
+.drawline2 {
+  border: 1px solid yellow;
+}
+
+.drawline3 {
+  border: 1px solid blue;
+}
+
+.drawline4 {
+  border: 1px solid green;
+}
