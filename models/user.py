@@ -1,11 +1,14 @@
-from models.base_model import BaseModel
 import peewee as pw
+import config as cfg
 from flask_login import UserMixin
+from models.base_model import BaseModel
+from playhouse.hybrid import hybrid_property, hybrid_method
 
 class User(BaseModel, UserMixin):
     username = pw.CharField(unique=True)
     email = pw.CharField(unique=True)
     password = pw.CharField()
+    image_path = pw.CharField(default="profile-placeholder.jpg")
 
     def validate(self):
         #-----------------------------------
@@ -33,6 +36,8 @@ class User(BaseModel, UserMixin):
             if user != self:
                 self.errors.append("This email has been registered with another account")
 
-
+    @hybrid_property
+    def profile_image_url(self):
+        return cfg.S3_LOCATION + self.image_path
             
         

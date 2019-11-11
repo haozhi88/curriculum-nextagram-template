@@ -2,6 +2,8 @@
    11/11
 2. (done) Custom error pages
 3. Upload profile image
+   -How to handle same file name on AWS? Need to rename before upload?
+   -How to preview image after selecting file?
 4. Upload images
 5. View images
    11/12

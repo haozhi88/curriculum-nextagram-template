@@ -1,3 +1,4 @@
+import config as cfg
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user
@@ -38,7 +39,7 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
         print("Something Happened: ", e)
         return e
 
-    return "{}{}".format(app.config["S3_LOCATION"], file.filename)
+    return "{}{}".format(cfg.S3_LOCATION, file.filename)
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 
@@ -123,41 +124,49 @@ def update(id):
         flash('Unauthorized user', 'alert alert-danger')
         return render_template('users/edit.html', username=username, email=email, id=id)
 
-@users_blueprint.route('/newimage', methods=['GET'])
-def newimage():
+@users_blueprint.route('/<id>/newimage', methods=['GET'])
+def newimage(id):
     return render_template('users/newimage.html')
 
-@users_blueprint.route('/newimage', methods=['POST'])
-def uploadimage():
-    
-    if "user_file" not in request.files:
-        flash('No user_file key in request.files', 'alert alert-danger')
-        return redirect(url_for('home'))
+@users_blueprint.route('/<id>/newimage', methods=['POST'])
+def uploadimage(id):
+    # Check for authorized user
+    user = User.get_or_none(User.id==id)
 
-    file    = request.files["user_file"]
+    if user.id == current_user.id:
+        if "user_file" not in request.files:
+            flash('No user_file key in request.files', 'alert alert-danger')
+            return redirect(url_for('users.newimage'))
 
-    """
-        These attributes are also available
+        file    = request.files["user_file"]
 
-        file.filename               # The actual name of the file
-        file.content_type
-        file.content_length
-        file.mimetype
+        """
+            These attributes are also available
 
-    """
+            file.filename               # The actual name of the file
+            file.content_type
+            file.content_length
+            file.mimetype
 
-    if file.filename == "":
-        flash('Please select a file', 'alert alert-danger')
-        return redirect(url_for('home'))
+        """
 
-    print(f"filename: {file.filename}")
+        if file.filename == "":
+            flash('Please select a file', 'alert alert-danger')
+            return redirect(url_for('users.newimage'))
 
-    if file and allowed_file(file.filename):
-        file.filename = secure_filename(file.filename)
-        output   	  = upload_file_to_s3(file, app.config["S3_BUCKET"])
-        flash('Upload successful', 'alert alert-success')
-        return redirect(url_for('home'))
-
-    else:
-        flash('Upload failed', 'alert alert-danger')
-        return redirect(url_for('home'))
+        if file and allowed_file(file.filename):
+            file.filename = secure_filename(file.filename)
+            output   	  = upload_file_to_s3(file, cfg.S3_BUCKET)
+            print(f"filename: {file.filename}")
+            print(f"output: {output}")
+            user.image_path = file.filename
+            if user.save():
+                flash('Upload successful', 'alert alert-success')
+                return redirect(url_for('users.edit', id=id))
+            else:
+                flash('Upload failed', 'alert alert-danger')
+                error_to_flash(user.errors)
+                return redirect(url_for('users.newimage'))
+        else:
+            flash('Upload failed', 'alert alert-danger')
+            return redirect(url_for('users.newimage'))
