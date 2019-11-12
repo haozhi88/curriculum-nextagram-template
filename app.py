@@ -18,6 +18,9 @@ csrf = CSRFProtect(app)
 # Flask login
 login_manager = LoginManager()
 login_manager.init_app(app) 
+login_manager.login_view = "sessions.new"
+login_manager.login_message = "Please log in before proceed"
+login_manager.login_message_category = "alert alert-warning"
 
 @login_manager.user_loader
 def load_user(user_id):

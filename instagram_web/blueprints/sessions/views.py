@@ -21,7 +21,7 @@ Route functions
 def new():
     return render_template('sessions/new.html')
 
-@sessions_blueprint.route('/', methods=['POST'])
+@sessions_blueprint.route('/signin', methods=['POST'])
 def create():
     # Fetch values from sign in form
     username = request.form.get('username')

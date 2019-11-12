@@ -4,14 +4,14 @@ endblock %} {% block header %} {% endblock %} {% block content %}
   <!-- User profile -->
   <div class="row">
     <!-- Picture -->
-    <div class="col-2">
-      <div class="container">
+    <div class="col-2 drawline2">
+      <div class="container drawline">
         <div class="row mt-3 justify-content-center">
           <img
             src="{{ user.profile_image_url }}"
             alt="profile picture"
-            class="img-fluid"
-            style="width: 25vh; height: 25vh; object-fit: cover;"
+            class="img-fluid rounded-circle"
+            style="width: 100%; object-fit: cover;"
           />
         </div>
       </div>

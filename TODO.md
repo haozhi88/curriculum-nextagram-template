@@ -2,8 +2,10 @@
    11/11
 2. (done) Custom error pages
 3. (done) Upload profile image
-   -How to handle same file name on AWS? Need to rename before upload?
+   -How to handle same file name on AWS?
+   ->Rename with datetime
    -How to preview image after selecting file?
+   ->Use javascript get element by id, then onchange
 4. (done) View images
    -(done) Create images model: user_id (as foreign_key), image_path
    -(done) Create html page to display images of any user

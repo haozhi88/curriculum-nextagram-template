@@ -1,7 +1,7 @@
 import config as cfg
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from flask_login import current_user
+from flask_login import current_user, login_required
 from helpers import s3
 from models.user import User
 from models.image import Image
@@ -53,7 +53,7 @@ Route functions
 def new():
     return render_template('users/new.html')
 
-@users_blueprint.route('/', methods=['POST'])
+@users_blueprint.route('/new', methods=['POST'])
 def create():
     # Fetch values from sign up form
     username = request.form.get('username')
@@ -94,6 +94,7 @@ def show(id_or_username):
     return show_profile(id_or_username, False) 
 
 @users_blueprint.route('/profile', methods=["GET"])
+@login_required
 def show_myprofile():
     session_id = current_user.get_id() # flask-login
     if session_id:
@@ -108,6 +109,7 @@ def index():
     return render_template('users/index.html', users=users)
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
+@login_required
 def edit(id):
     # session_id = session.get('id') # flask-session
     session_id = current_user.get_id() # flask-login
@@ -125,6 +127,7 @@ def edit(id):
         return redirect(url_for('home'))
 
 @users_blueprint.route('/<id>', methods=['POST'])
+@login_required
 def update(id):
     # Fetch values from sign up form
     username = request.form.get('username')
@@ -151,10 +154,12 @@ def update(id):
         return render_template('users/edit.html', username=username, email=email, id=id)
 
 @users_blueprint.route('/<id>/newimage', methods=['GET'])
+@login_required
 def newimage(id):
     return render_template('users/newimage.html')
 
 @users_blueprint.route('/<id>/newimage', methods=['POST'])
+@login_required
 def uploadimage(id):
     # Check for authorized user
     user = User.get_or_none(User.id==id)
