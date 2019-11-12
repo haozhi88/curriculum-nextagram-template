@@ -1,36 +1,27 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask_login import login_user, logout_user, login_required
+from models.user import User
 
-
-users_blueprint = Blueprint('users',
+images_blueprint = Blueprint('images',
                             __name__,
                             template_folder='templates')
 
+"""""""""""""""""""""""""""""""""
+Others
+"""""""""""""""""""""""""""""""""
+def error_to_flash(errors):
+    for error in errors:
+        flash(error, 'alert alert-danger')
 
-@users_blueprint.route('/new', methods=['GET'])
+"""""""""""""""""""""""""""""""""
+Route functions
+"""""""""""""""""""""""""""""""""
+@images_blueprint.route('/new', methods=['GET'])
 def new():
-    return render_template('users/new.html')
+    return render_template('images/new.html')
 
 
-@users_blueprint.route('/', methods=['POST'])
+@images_blueprint.route('/new', methods=['POST'])
 def create():
     pass
 
-
-@users_blueprint.route('/<username>', methods=["GET"])
-def show(username):
-    pass
-
-
-@users_blueprint.route('/', methods=["GET"])
-def index():
-    return "USERS"
-
-
-@users_blueprint.route('/<id>/edit', methods=['GET'])
-def edit(id):
-    pass
-
-
-@users_blueprint.route('/<id>', methods=['POST'])
-def update(id):
-    pass
