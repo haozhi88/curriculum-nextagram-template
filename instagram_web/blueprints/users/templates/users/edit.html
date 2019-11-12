@@ -75,6 +75,27 @@ block header %} {% endblock %} {% block content %}
           <small>Fill your password to confirm the changes</small>
         </div>
 
+        <!-- Private -->
+        <div class="form-group form-check">
+          {% if private %}
+          <input
+            type="checkbox"
+            class="form-check-input"
+            name="private"
+            id="privateCheck"
+            checked
+          />
+          {% else %}
+          <input
+            type="checkbox"
+            class="form-check-input"
+            name="private"
+            id="privateCheck"
+          />
+          {% endif %}
+          <label class="form-check-label" for="privateCheck">Set private</label>
+        </div>
+
         <!-- Update -->
         <button type="submit" class="btn btn-primary">Update</button>
       </form>

@@ -11,6 +11,7 @@ class User(BaseModel, UserMixin):
     password = pw.CharField()
     role = pw.CharField(default="user")
     image_path = pw.CharField(default="profile-placeholder.jpg")
+    private = pw.BooleanField(default=False)
 
     def validate(self):
         #-----------------------------------

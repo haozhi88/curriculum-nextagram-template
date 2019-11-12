@@ -23,6 +23,8 @@ endblock %} {% block header %} {% endblock %} {% block content %}
     </div>
   </div>
 
+  {% if (not user.private) or (current_user.is_authenticated and
+  (current_user.id == user.id)) %}
   <!-- User images -->
   <div class="row mt-2">
     {% for image in images %}
@@ -36,6 +38,7 @@ endblock %} {% block header %} {% endblock %} {% block content %}
     </div>
     {%endfor%}
   </div>
+  {% endif %}
 </div>
 
 {% endblock %}

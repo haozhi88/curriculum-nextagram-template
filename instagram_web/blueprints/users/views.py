@@ -77,7 +77,7 @@ def show_myprofile():
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    users = User.select()
+    users = User.select().order_by(User.id.asc())
     return render_template('users/index.html', users=users)
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
@@ -88,11 +88,10 @@ def edit(id):
     if session_id:
         user = User.get_or_none(User.id==id)
         if user and session_id==user.id:
-            print(f"debug user: {type(user)}")
-            print(f"debug current_user: {type(current_user)}")
             username=user.username
             email=user.email
-            return render_template('users/edit.html', username=username, email=email, id=id)
+            private=user.private
+            return render_template('users/edit.html', username=username, email=email, private=private, id=id)
         else:
             flash('Unauthorized user', 'alert alert-danger')
             return redirect(url_for('home'))
@@ -107,6 +106,10 @@ def update(id):
     username = request.form.get('username')
     email = request.form.get('email')
     password = request.form.get('password')
+    if request.form.get('private') == "on":
+        private = True
+    else:
+        private = False
 
     # Perform validation
 
@@ -116,16 +119,17 @@ def update(id):
         user.username = username
         user.email = email
         user.password = password
+        user.private = private
         if user.save():
             flash('Update successful', 'alert alert-success')
             return redirect(url_for('users.edit', id=id))
         else:
             flash('Update failed', 'alert alert-danger')
             error_to_flash(user.errors)
-            return render_template('users/edit.html', username=username, email=email, id=id)
+            return render_template('users/edit.html', username=username, email=email, private=private, id=id)
     else:        
         flash('Unauthorized user', 'alert alert-danger')
-        return render_template('users/edit.html', username=username, email=email, id=id)
+        return render_template('users/edit.html', username=username, email=email, private=private, id=id)
 
 @users_blueprint.route('/<id>/newimage', methods=['GET'])
 @login_required
