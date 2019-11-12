@@ -10,7 +10,7 @@ block header %} {% endblock %} {% block content %}
           <img
             src="{{ current_user.profile_image_url }}"
             alt="profile picture"
-            class="img-fluid profile-picture-show"
+            class="img-fluid"
             style="width: 25vh; height: 25vh; object-fit: cover;"
           />
         </div>
@@ -43,6 +43,7 @@ block header %} {% endblock %} {% block content %}
             name="username"
             placeholder="Enter username"
             value="{{ username }}"
+            required
           />
         </div>
 
@@ -56,6 +57,7 @@ block header %} {% endblock %} {% block content %}
             name="email"
             placeholder="Enter email"
             value="{{ email }}"
+            required
           />
         </div>
 
@@ -68,7 +70,9 @@ block header %} {% endblock %} {% block content %}
             id="password-input"
             name="password"
             placeholder="Enter new password"
+            required
           />
+          <small>Fill your password to confirm the changes</small>
         </div>
 
         <!-- Update -->

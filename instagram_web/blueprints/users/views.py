@@ -63,7 +63,6 @@ def create():
     # Perform validation
 
     # Create new user
-    password = generate_password_hash(password)
     user = User(username=username, email=email, password=password)
     if user.save():
         flash('New user created', 'alert alert-success')
@@ -100,12 +99,13 @@ def show_myprofile():
     if session_id:
         return show_profile(str(session_id), True)
     else:
-        flash('Not logged in', 'alert alert-danger')
+        flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    return "USERS"
+    users = User.select()
+    return render_template('users/index.html', users=users)
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 def edit(id):
@@ -121,7 +121,7 @@ def edit(id):
             flash('Unauthorized user', 'alert alert-danger')
             return redirect(url_for('home'))
     else:
-        flash('Not logged in', 'alert alert-danger')
+        flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
 
 @users_blueprint.route('/<id>', methods=['POST'])
@@ -138,7 +138,7 @@ def update(id):
     if user.id == current_user.id:
         user.username = username
         user.email = email
-        user.password = generate_password_hash(password)
+        user.password = password
         if user.save():
             flash('Update successful', 'alert alert-success')
             return redirect(url_for('users.edit', id=id))
