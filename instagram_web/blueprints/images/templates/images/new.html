@@ -1,17 +1,22 @@
 {% extends "_layout.html" %} {% block title %}Upload new image{% endblock %} {%
 block header %} {% endblock %} {% block content %}
 <div class="container">
-  <h3>Upload new image</h3>
+  <h3 style="text-align: center;">Upload new image</h3>
+
+  <!-- Preview picture -->
   <div class="row mt-3 justify-content-center">
     <div class="card">
       <img
         src="https://nextagram-lee.s3.amazonaws.com/empty.jpg"
         class="card-img-top"
         alt="profile picture"
-        style="height: 35vh; width: 35vh; object-fit: cover;"
+        style="height: 40vh; width: 35vw; object-fit: cover;"
+        id="image-preview"
       />
     </div>
   </div>
+
+  <!-- Upload form -->
   <div class="row mt-3 justify-content-center">
     <form
       action="{{ url_for('images.create') }}"
@@ -22,7 +27,18 @@ block header %} {% endblock %} {% block content %}
       <div class="row">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       </div>
-      <div class="row"><input type="file" name="user_file" /></div>
+
+      <!-- File input -->
+      <div class="row">
+        <input
+          type="file"
+          name="user_file"
+          accept="image/png, image/jpeg, image/gif"
+          id="image-fileinput"
+        />
+      </div>
+
+      <!-- Upload button -->
       <div class="row mt-3">
         <button type="submit" class="btn btn-primary">Upload</button>
       </div>
@@ -31,9 +47,18 @@ block header %} {% endblock %} {% block content %}
 </div>
 
 <script>
-  function onChangeProfilePicture() {
-    console.log("Testing 123");
-  }
+  const pImagePreview = document.getElementById("image-preview");
+  const pImageFileInput = document.getElementById("image-fileinput");
+  pImageFileInput.addEventListener(
+    "change",
+    (onChangeFileInput = e => {
+      const file = e.target.files[0];
+      if (file) {
+        imageUrl = URL.createObjectURL(file);
+        pImagePreview.src = imageUrl;
+      }
+    })
+  );
 </script>
 
 {% endblock %}

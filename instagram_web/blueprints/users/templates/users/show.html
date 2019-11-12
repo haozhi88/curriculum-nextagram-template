@@ -39,16 +39,18 @@ endblock %} {% block header %} {% endblock %} {% block content %}
         {% if current_user.is_authenticated %}
         <div class="card-img-overlay" id="card-button">
           <div class="d-flex justify-content-end">
+            <!-- Donate form -->
             <form action="{{ url_for('home') }}">
               <button type="submit" class="btn btn-outline-light m-1">
                 Donate
               </button>
             </form>
+
+            <!-- Delete form -->
             <form
               action="{{ url_for('images.delete', id=image.id) }}"
               method="POST"
             >
-              <!-- CSRF Protection -->
               <input
                 type="hidden"
                 name="csrf_token"
@@ -71,10 +73,5 @@ endblock %} {% block header %} {% endblock %} {% block content %}
   </div>
   {% endif %}
 </div>
-
-<script>
-  // const pCardButton = document.getElementById("card-button");
-  // pCardButton.style.display = "none";
-</script>
 
 {% endblock %}
