@@ -34,9 +34,7 @@ def new():
 @login_required
 def create():
     if current_user.is_authenticated:
-        # Check for authorized user
         user = User.get_or_none(User.id==current_user.id)
-
         if "user_file" not in request.files:
             flash('No user_file key in request.files', 'alert alert-danger')
             return redirect(url_for('images.new'))
@@ -68,6 +66,34 @@ def create():
     else:
         flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
+
+@images_blueprint.route('/<id>/delete', methods=['POST'])
+@login_required
+def delete(id):
+    if current_user.is_authenticated:
+        image = Image.get_or_none(Image.id==id)
+        if image.user == User.get_or_none(User.id==current_user.id):
+            if image:
+                image.delete_instance()
+                flash('Image successfully deleted', 'alert alert-success')
+            else:
+                flash('Image not exist', 'alert alert-danger')
+        else:
+            flash('No permission to delete', 'alert alert-danger')
+        return redirect(url_for('users.show', id_or_username=current_user.username))
+    else:
+        flash('Log in required', 'alert alert-danger')
+        return redirect(url_for('home'))
+
+    
+
+
+
+
+
+
+
+
 
 
 

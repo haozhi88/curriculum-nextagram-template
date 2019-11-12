@@ -11,7 +11,7 @@ endblock %} {% block header %} {% endblock %} {% block content %}
             src="{{ user.profile_image_url }}"
             alt="profile picture"
             class="img-fluid rounded-circle"
-            style="object-fit: cover;"
+            style="width: 300px; height: 300px; object-fit: cover;"
           />
         </div>
       </div>
@@ -29,12 +29,39 @@ endblock %} {% block header %} {% endblock %} {% block content %}
   <div class="row mt-2">
     {% for image in images %}
     <div class="col-4 mt-4">
-      <img
-        src="{{ image.image_url }}"
-        alt="user image"
-        class="img-fluid"
-        style="width: 100%; height: 35vh; object-fit: cover;"
-      />
+      <div class="card text-white">
+        <img
+          src="{{ image.image_url }}"
+          alt="user image"
+          class="img-fluid"
+          style="width: 100%; height: 35vh; object-fit: cover;"
+        />
+        {% if current_user.is_authenticated %}
+        <div class="card-img-overlay" id="card-button">
+          <div class="d-flex justify-content-end">
+            <form action="{{ url_for('home') }}">
+              <button type="submit" class="btn btn-outline-light m-1">
+                Donate
+              </button>
+            </form>
+            <form
+              action="{{ url_for('images.delete', id=image.id) }}"
+              method="POST"
+            >
+              <!-- CSRF Protection -->
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
+              <button type="submit" class="btn btn-outline-light m-1" name="">
+                Delete
+              </button>
+            </form>
+          </div>
+        </div>
+        {% endif %}
+      </div>
     </div>
     {%endfor%}
   </div>
@@ -44,5 +71,10 @@ endblock %} {% block header %} {% endblock %} {% block content %}
   </div>
   {% endif %}
 </div>
+
+<script>
+  // const pCardButton = document.getElementById("card-button");
+  // pCardButton.style.display = "none";
+</script>
 
 {% endblock %}
