@@ -12,7 +12,7 @@
    -(done) Create html page to display images of current user
 5. Upload images
    -(done) Create html page to upload image of current user
-   -Add field for users model: private (default=False)
+   -(done) Add field for users model: private (default=False)
    11/12
 6. Payment gateway -> Brain tree
 7. Send email -> Sendgrid

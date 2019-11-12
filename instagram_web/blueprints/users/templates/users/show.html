@@ -4,21 +4,21 @@ endblock %} {% block header %} {% endblock %} {% block content %}
   <!-- User profile -->
   <div class="row">
     <!-- Picture -->
-    <div class="col-2">
+    <div class="col-3">
       <div class="container">
         <div class="row mt-3 justify-content-center">
           <img
             src="{{ user.profile_image_url }}"
             alt="profile picture"
             class="img-fluid rounded-circle"
-            style="width: 300px; height: 300px; object-fit: cover;"
+            style="object-fit: cover;"
           />
         </div>
       </div>
     </div>
 
     <!-- Details -->
-    <div class="col-10 mt-3">
+    <div class="col-9 mt-3">
       <h3>Welcome to {{ user.username }}'s page!</h3>
     </div>
   </div>
@@ -37,6 +37,10 @@ endblock %} {% block header %} {% endblock %} {% block content %}
       />
     </div>
     {%endfor%}
+  </div>
+  {% else %}
+  <div class="row mt-5 justify-content-center align-items-center">
+    <p><i>This profile is private</i></p>
   </div>
   {% endif %}
 </div>
