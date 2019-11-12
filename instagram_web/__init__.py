@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template
+from flask import render_template, redirect, url_for
 from instagram_web.blueprints.users.views import users_blueprint
 # from instagram_web.blueprints.images.views import images_blueprint
 from instagram_web.blueprints.sessions.views import sessions_blueprint
@@ -24,7 +24,6 @@ def page_not_found(e):
 
 @app.route("/")
 def home():
-    # from flask import session
-    # breakpoint()
-    return render_template('home.html')
+    # return render_template('home.html')
+    return redirect(url_for('users.index')) 
 
