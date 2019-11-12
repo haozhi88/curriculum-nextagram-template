@@ -1,8 +1,7 @@
-import config as cfg
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, login_required
-from helpers import s3
+from helpers import *
 from models.user import User
 from models.image import Image
 from werkzeug.security import generate_password_hash
@@ -18,33 +17,6 @@ Others
 def error_to_flash(errors):
     for error in errors:
         flash(error, 'alert alert-danger')
-
-def upload_file_to_s3(file, bucket_name, acl="public-read"):
-    """
-    Docs: http://boto3.readthedocs.io/en/latest/guide/s3.html
-    """
-
-    try:
-
-        s3.upload_fileobj(
-            file,
-            bucket_name,
-            file.filename,
-            ExtraArgs={
-                "ACL": acl,
-                "ContentType": file.content_type
-            }
-        )
-
-    except Exception as e:
-        print("Something Happened: ", e)
-        return e
-
-    return "{}{}".format(cfg.S3_LOCATION, file.filename)
-
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in cfg.ALLOWED_IMAGE_EXTENSIONS
 
 """""""""""""""""""""""""""""""""
 Route functions
@@ -116,6 +88,8 @@ def edit(id):
     if session_id:
         user = User.get_or_none(User.id==id)
         if user and session_id==user.id:
+            print(f"debug user: {type(user)}")
+            print(f"debug current_user: {type(current_user)}")
             username=user.username
             email=user.email
             return render_template('users/edit.html', username=username, email=email, id=id)
@@ -187,14 +161,10 @@ def uploadimage(id):
 
         if file and allowed_file(file.filename):
             file.filename = secure_filename(file.filename)
-            output   	  = upload_file_to_s3(file, cfg.S3_BUCKET)
-            user.image_path = file.filename
-            if user.save():
+            output   	  = upload_file_to_s3(file, S3_BUCKET)
+            if User.update(image_path = file.filename).where(User.id==user.id).execute():
                 flash('Upload successful', 'alert alert-success')
                 return redirect(url_for('users.edit', id=id))
-            else:
-                error_to_flash(user.errors)
-                return redirect(url_for('users.newimage', id=id))
 
     flash('Upload failed', 'alert alert-danger')
     return redirect(url_for('users.newimage', id=id))
