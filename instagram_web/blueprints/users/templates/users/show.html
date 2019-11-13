@@ -40,7 +40,7 @@ endblock %} {% block header %} {% endblock %} {% block content %}
         <div class="card-img-overlay" id="card-button">
           <div class="d-flex justify-content-end">
             <!-- Donate form -->
-            <form action="{{ url_for('home') }}">
+            <form action="{{ url_for('payment.new', id=image.id) }}">
               <button type="submit" class="btn btn-outline-light m-1">
                 Donate
               </button>

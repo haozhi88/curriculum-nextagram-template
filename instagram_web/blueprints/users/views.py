@@ -1,7 +1,7 @@
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, login_required
-from helpers_payment import *
+from helpers_braintree import *
 from models.user import User
 from models.image import Image
 from helpers_sendgrid import *
