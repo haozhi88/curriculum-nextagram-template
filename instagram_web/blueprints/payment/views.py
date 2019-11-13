@@ -2,8 +2,10 @@ from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, login_user, logout_user, login_required
 from helpers_braintree import *
+from helpers_s3 import *
 from models.user import User
 from models.image import Image
+from models.donation import Donation
 
 payment_blueprint = Blueprint('payment',
                             __name__,
@@ -55,23 +57,30 @@ def show(transaction_id):
 @login_required
 def create(id):
     if current_user.is_authenticated:
+        amount = int(request.form.get('amount'))
         result = transact({
-            'amount': request.form['amount'],
+            'amount': amount,
             'payment_method_nonce': request.form['payment_method_nonce'],
             'options': {
                 "submit_for_settlement": True
             }
         })
 
-        image = Image.get_or_none(Image.id==id)
-        receiver = image.user
-        print(f"create image id: {image.id}, image path: {image.image_path}")
-        print(f"create donater: {current_user.username}")
-        print(f"create receiver: {receiver.username}")
-
         if result.is_success or result.transaction:
-            flash('Donate successful', 'alert alert-success')
-            return redirect(url_for('home'))
+            image = Image.get_or_none(Image.id==id)
+            receiver = image.user
+            donor = User.get_by_id(current_user.id)
+            amount = amount*100
+            donation = Donation(receiver=receiver, donor_id=donor.id, image=image, amount=amount)
+            if donation.save():
+                # print(f"donor: {donation.donor.username}")
+                # print(f"receiver: {donation.receiver.username}")
+                # print(f"amount: {donation.amount}")
+                flash('Donation successful', 'alert alert-success')
+                return redirect(url_for('home'))
+            else:
+                flash('Donation unsuccessful', 'alert alert-danger')
+                return redirect(url_for('home'))
         else:
             for x in result.errors.deep_errors: flash('Error: %s: %s' % (x.code, x.message))
             return redirect(url_for('payment.new', id=id))
