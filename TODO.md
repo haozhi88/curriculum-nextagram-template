@@ -2,10 +2,8 @@
    11/11
 2. (done) Custom error pages
 3. (done) Upload profile image
-   -(todo) How to handle same file name on AWS?
-   ->Rename with datetime
-   -(todo) How to preview image after selecting file?
-   ->Use javascript get element by id, then onchange
+   -(TODO) How to handle same file name on AWS? ->Rename with datetime
+   -(done) How to preview image after selecting file?
 4. (done) View images
    -(done) Create images model: user_id (as foreign_key), image_path
    -(done) Create html page to display images of any user
@@ -15,7 +13,7 @@
    -(done) Add field for users model: private (default=False)
    11/12
 6. Payment gateway -> Brain tree
-7. Send email -> Sendgrid
+7. (done) Send email -> Sendgrid
 8. Background job
    11/13
 9. Sign in via OAuth -> Authlib

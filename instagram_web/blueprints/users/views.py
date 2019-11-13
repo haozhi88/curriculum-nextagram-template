@@ -4,6 +4,7 @@ from flask_login import current_user, login_required
 from helpers import *
 from models.user import User
 from models.image import Image
+from helpers_sendgrid import *
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
@@ -167,6 +168,7 @@ def uploadimage(id):
             file.filename = secure_filename(file.filename)
             output   	  = upload_file_to_s3(file, S3_BUCKET)
             if User.update(image_path = file.filename).where(User.id==user.id).execute():
+                send_email(f"{user.username} has uploaded a new image {file.filename}")
                 flash('Upload successful', 'alert alert-success')
                 return redirect(url_for('users.edit', id=id))
 
