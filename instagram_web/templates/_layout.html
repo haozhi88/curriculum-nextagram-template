@@ -55,19 +55,19 @@
           {% if current_user.is_authenticated %}
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('users.show_myprofile') }}"
-              >My Profile</a
+              >Profile</a
             >
           </li>
           <li class="nav-item">
             <a
               class="nav-link"
               href="{{ url_for('users.edit', id=current_user.get_id()) }}"
-              >Edit Profile</a
+              >Edit</a
             >
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('images.new') }}"
-              >Upload image</a
+              >Upload</a
             >
           </li>
           <li class="nav-item">
