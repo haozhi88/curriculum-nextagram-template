@@ -1,0 +1,42 @@
+@import "variables";
+@import "home";
+@import "auth";
+
+body {
+  margin: 0;
+  padding-bottom: 15px;
+  position: relative;
+  min-height: 100vh;
+  background: $primary-color;
+}
+
+footer {
+  font-size: 11px;
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #303030;
+}
+
+footer a {
+  text-decoration: none;
+  color: #303030;
+}
+
+.drawline {
+  border: 1px solid red;
+}
+
+.drawline2 {
+  border: 1px solid yellow;
+}
+
+.drawline3 {
+  border: 1px solid blue;
+}
+
+.drawline4 {
+  border: 1px solid green;
+}
