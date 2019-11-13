@@ -12,9 +12,9 @@
    -(done) Create html page to upload image of current user
    -(done) Add field for users model: private (default=False)
    11/12
-6. Payment gateway -> Brain tree
+6. (done) Payment gateway -> Brain tree
 7. (done) Send email -> Sendgrid
-8. Background job
+8. (TODO) Background job
    11/13
 9. Sign in via OAuth -> Authlib
 10. User following user

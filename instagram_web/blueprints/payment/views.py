@@ -1,8 +1,8 @@
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, login_user, logout_user, login_required
-from helpers_braintree import *
-from helpers_s3 import *
+from helpers.braintree import *
+from helpers.s3 import *
 from models.user import User
 from models.image import Image
 from models.donation import Donation
