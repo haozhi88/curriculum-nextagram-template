@@ -8,16 +8,17 @@
    -(done) Create images model: user_id (as foreign_key), image_path
    -(done) Create html page to display images of any user
    -(done) Create html page to display images of current user
+   11/12
 5. Upload images
    -(done) Create html page to upload image of current user
    -(done) Add field for users model: private (default=False)
-   11/12
+   11/13
 6. (done) Payment gateway -> Brain tree
 7. (done) Send email -> Sendgrid
 8. (TODO) Background job
-   11/13
-9. Sign in via OAuth -> Authlib
+   11/14
+9. (done)Sign in via OAuth -> Authlib
+   11/15
 10. User following user
-    11/14
 11. Deployment
 12. API

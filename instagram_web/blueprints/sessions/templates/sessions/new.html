@@ -2,6 +2,7 @@
 header %} {% endblock %} {% block content %}
 <div class="container">
   <h3>Sign In</h3>
+  <!-- Regular log in -->
   <form action="{{ url_for('sessions.create') }}" method="POST">
     <!-- CSRF Protection -->
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
@@ -34,7 +35,14 @@ header %} {% endblock %} {% block content %}
     </div>
 
     <!-- Sign In -->
-    <button type="submit" class="btn btn-primary">Sign In</button>
+    <button type="submit" class="btn btn-outline-primary">Sign In</button>
+  </form>
+  <hr />
+  <!-- Log in with Google -->
+  <form action="{{ url_for('sessions.login') }}">
+    <button type="submit" class="btn btn-outline-primary">
+      Sign In with Google
+    </button>
   </form>
 </div>
 

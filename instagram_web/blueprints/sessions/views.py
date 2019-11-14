@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import login_user, logout_user, login_required
+from helpers.google_oauth import *
 from models.user import User
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -47,6 +48,26 @@ def destroy():
     # session.pop('id', None) # flask-session
     logout_user() # flask-login
     flash('Successfully logged out', 'alert alert-warning') 
+    return redirect(url_for('home'))
+
+@sessions_blueprint.route('/login')
+def login():
+    redirect_uri = url_for('sessions.authorize', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+@sessions_blueprint.route('/authorize/google')
+def authorize():
+    token = oauth.google.authorize_access_token()
+    email = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()['email']
+    user = User.get_or_none(User.email == email)
+    if user:
+        # session['id'] = user.id # flask-session
+        login_user(user) # flask-login
+        flash('Successfully logged in with Google', 'alert alert-success')
+        return redirect(url_for('home'))
+    else:
+        flash('Cannot log in with Google', 'alert alert-danger')
+        return render_template('/sessions/new.html')
     return redirect(url_for('home'))
 
 # <form action="{{ url_for('sessions.destroy') }}" method="POST">
