@@ -1,4 +1,3 @@
-import config as cfg
 from models.base_model import BaseModel
 from models.user import User
 from models.image import Image

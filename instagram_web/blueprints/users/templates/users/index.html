@@ -1,7 +1,7 @@
 {% extends "_layout.html" %} {% block title %}Home{% endblock %} {% block header
 %} {% endblock %} {% block content %}
 <div class="container-fluid">
-  {% for user in users %}
+  {% for user in users %} {% if user.id != current_user.id %}
   <div class="row mt-3" style="background-color: rgb(243, 240, 240)">
     <!-- Profile -->
     <div class="col-3 mt-3 d-flex justify-content-center align-items-center">
@@ -27,8 +27,7 @@
     <div class="col-9">
       <div class="container">
         <div class="row">
-          {% if (not user.private) or (current_user.is_authenticated and
-          (current_user.id == user.id)) %} {% for image in user.images %}
+          {% if not user.private %} {% for image in user.images %}
           <div class="col-4 mt-2 mb-2">
             <img
               src="{{ image.image_url }}"
@@ -46,6 +45,6 @@
       </div>
     </div>
   </div>
-  {%endfor%}
+  {% endif %} {% endfor %}
 </div>
 {% endblock %}

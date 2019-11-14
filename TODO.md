@@ -20,5 +20,11 @@
 9. (done)Sign in via OAuth -> Authlib
    11/15
 10. User following user
+    -User can follow other users
+    -Create feed to show followed users
+    -Followed user will receive email request to follow
+    -If followed user's profile is private, followers can only see the profile after follow request is accepted
+    -Route to approve follow request
+    11/16
 11. Deployment
 12. API
