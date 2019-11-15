@@ -42,7 +42,6 @@ class User(BaseModel, UserMixin):
         # Check password
         # self.password = generate_password_hash(self.password)
         if len(self.password) < 3 or len(self.password) > 25:
-            print(f"debug password: {self.password}")
             self.errors.append("Password must be between 3~25 characters")
         else:
             self.password = generate_password_hash(self.password)

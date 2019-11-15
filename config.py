@@ -13,12 +13,12 @@ class Config(object):
     SECRET_KEY = os.environ.get(
         'SECRET_KEY') or os.urandom(32)
     MAX_CONTENT_LENGTH = 4 * 1024 * 1024 # restrict content to 16MB
-    GOOGLE_CLIENT_ID=os.environ.get('GOOGLE_CLIENT_ID')
-    GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
 
 class ProductionConfig(Config):
     DEBUG = False
     ASSETS_DEBUG = False
+    GOOGLE_CLIENT_ID=os.environ.get('GOOGLE_CLIENT_ID')
+    GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
 
 
 class StagingConfig(Config):
@@ -31,6 +31,8 @@ class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     ASSETS_DEBUG = False
+    GOOGLE_CLIENT_ID=os.environ.get('GOOGLE_CLIENT_ID')
+    GOOGLE_CLIENT_SECRET=os.environ.get('GOOGLE_CLIENT_SECRET')
 
 class TestingConfig(Config):
     TESTING = True

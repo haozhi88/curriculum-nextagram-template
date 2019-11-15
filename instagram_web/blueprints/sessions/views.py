@@ -58,17 +58,22 @@ def login():
 @sessions_blueprint.route('/authorize/google')
 def authorize():
     token = oauth.google.authorize_access_token()
-    email = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()['email']
-    user = User.get_or_none(User.email == email)
-    if user:
-        # session['id'] = user.id # flask-session
-        login_user(user) # flask-login
-        flash('Successfully logged in with Google', 'alert alert-success')
-        return redirect(url_for('home'))
+    if token:
+        # email = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()['email']
+        data = oauth.google.get('https://www.googleapis.com/oauth2/v2/userinfo').json()
+        email = data['email']
+        user = User.get_or_none(User.email == email)
+        if user:
+            # session['id'] = user.id # flask-session
+            login_user(user) # flask-login
+            flash('Successfully logged in with Google', 'alert alert-success')
+            return redirect(url_for('home'))
+        else:
+            flash('No account registered with this email', 'alert alert-danger')
+            return render_template('/sessions/new.html')
     else:
         flash('Cannot log in with Google', 'alert alert-danger')
         return render_template('/sessions/new.html')
-    return redirect(url_for('home'))
 
 # <form action="{{ url_for('sessions.destroy') }}" method="POST">
 #     <input class="nav-link" value="Sign Out" type="submit" />

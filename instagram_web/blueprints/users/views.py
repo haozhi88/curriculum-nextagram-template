@@ -1,6 +1,6 @@
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from flask_login import current_user, login_required
+from flask_login import current_user, login_required, login_user, logout_user
 from helpers.braintree import *
 from helpers.sendgrid import *
 from helpers.s3 import *
@@ -34,20 +34,18 @@ def create():
     email = request.form.get('email')
     password = request.form.get('password')
 
-    # Perform validation
-
     # Create new user
     user = User(username=username, email=email, password=password)
     if user.save():
-        flash('New user created', 'alert alert-success')
+        # session['id'] = user.id # flask-session
+        login_user(user) # flask-login
+        flash('New user created and logged in', 'alert alert-success')
         return redirect(url_for('home'))
     else:
         error_to_flash(user.errors)
         return render_template('users/new.html', username=username, email=email)
 
 def show_profile(id_or_username, is_profile):
-    # TODO: for private profile, need to get session and check current user id
-
     # Get user by id or username
     if id_or_username.isdigit():
         user = User.get_or_none(User.id==id_or_username)
@@ -112,8 +110,6 @@ def update(id):
         private = True
     else:
         private = False
-
-    # Perform validation
 
     # Check for authorized user
     user = User.get_or_none(User.id==id)
