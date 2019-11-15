@@ -21,12 +21,22 @@ Route functions
 @relationship_blueprint.route('/followers', methods=['GET'])
 @login_required
 def show_fan():
-    return render_template('relationship/show_fan.html')
+    if current_user.is_authenticated:
+        # todo
+        return render_template('relationship/show_fan.html')
+    else:
+        flash('Log in required', 'alert alert-danger')
+        return redirect(url_for('home'))
 
 @relationship_blueprint.route('/following', methods=['GET'])
 @login_required
-def show_idol(id):
-    pass
+def show_idol():
+    if current_user.is_authenticated:
+        # todo
+        return render_template('relationship/show_fan.html')
+    else:
+        flash('Log in required', 'alert alert-danger')
+        return redirect(url_for('home'))
 
 @relationship_blueprint.route('/<idol_id>/follow', methods=['POST'])
 @login_required
@@ -43,7 +53,7 @@ def follow(idol_id):
                     flash('Follow profile successful', 'alert alert-success')
                     return redirect(url_for('users.show', id_or_username=idol.username))
             else:
-                flash('Already followed', 'alert alert-danger')
+                flash('Profile has been followed', 'alert alert-danger')
         else:
             flash('Follow profile failed', 'alert alert-danger')
         return redirect(url_for('users.show', id_or_username=idol.username))
@@ -51,10 +61,29 @@ def follow(idol_id):
         flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
 
-@relationship_blueprint.route('/<id>/unfollow', methods=['POST'])
+@relationship_blueprint.route('/<idol_id>/unfollow', methods=['POST'])
 @login_required
-def unfollow(id):
-    pass
+def unfollow(idol_id):
+    if current_user.is_authenticated:
+        fan = User.get_or_none(User.id==current_user.id)
+        idol = User.get_or_none(User.id==idol_id)
+        if fan and idol:
+            query = Relationship.select().where(Relationship.idol==idol, Relationship.fan==fan) 
+            if len(query):
+                relationship = query[0]
+                if relationship.delete_instance():
+                    flash('Unfollow profile successful', 'alert alert-success')
+                    return redirect(url_for('users.show', id_or_username=idol.username))
+                else:
+                    flash('Unfollow profile failed', 'alert alert-danger')
+            else:
+                flash('Profile has not been followed', 'alert alert-danger')
+        else:
+            flash('Unfollow profile failed', 'alert alert-danger')
+        return redirect(url_for('users.show', id_or_username=idol.username))
+    else:
+        flash('Log in required', 'alert alert-danger')
+        return redirect(url_for('home'))
 
 @relationship_blueprint.route('/<id>/approve', methods=['POST'])
 @login_required

@@ -77,8 +77,11 @@ def show_myprofile():
 
 @users_blueprint.route('/', methods=["GET"])
 def index():
-    users = User.select().order_by(User.id.asc())
-    return render_template('users/index.html', users=users)
+    if current_user.is_authenticated:
+        users = User.select().order_by(User.id.asc())
+        return render_template('users/index.html', users=users)
+    else:
+        return redirect(url_for('sessions.new'))
 
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 @login_required
