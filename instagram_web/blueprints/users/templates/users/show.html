@@ -23,7 +23,11 @@ endblock %} {% block header %} {% endblock %} {% block content %}
         <h3>Welcome to {{ user.username }}'s page!</h3>
       </div>
       <div class="row">
-        <form action="{{ url_for('home') }}">
+        <form
+          action="{{ url_for('relationship.follow', idol_id=user.id) }}"
+          method="POST"
+        >
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button type="submit" class="btn btn-outline-primary mt-3">
             Follow
           </button>
@@ -31,6 +35,8 @@ endblock %} {% block header %} {% endblock %} {% block content %}
       </div>
     </div>
   </div>
+
+  <hr />
 
   {% if (not user.private) or (current_user.is_authenticated and
   (current_user.id == user.id)) %}

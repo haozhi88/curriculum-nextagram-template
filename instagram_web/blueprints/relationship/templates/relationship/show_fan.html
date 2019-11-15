@@ -1,0 +1,39 @@
+{% extends "_layout.html" %} {% block title %}{{ current_user.username }}'s
+followers{% endblock %} {% block header %} {% endblock %} {% block content %}
+<div class="container-fluid m-3">
+  <div class="row"><h4>Approved Followers</h4></div>
+  <!-- first -->
+  <div class="row m-3">
+    <div class="col-2 d-flex justify-content-center align-items-center">
+      <img
+        src="{{ current_user.profile_image_url }}"
+        alt="profile picture"
+        class="img-fluid rounded-circle"
+        style="width: 50px; height: 50px; object-fit: cover;"
+      />
+      <a
+        class="nav-link ml-2"
+        href="{{ url_for('users.show', id_or_username=current_user.id) }}"
+      >
+        {{current_user.username}}</a
+      >
+    </div>
+    <div class="col-2 d-flex justify-content-around align-items-center">
+      <form action="{{ url_for('home') }}">
+        <button type="submit" class="btn btn-outline-primary">
+          Approve
+        </button>
+      </form>
+      <form action="{{ url_for('home') }}" class="ml-1">
+        <button type="submit" class="btn btn-outline-primary">
+          Block
+        </button>
+      </form>
+    </div>
+  </div>
+  <hr />
+  <div class="row"><h4>Pending Requests</h4></div>
+  <div class="row"></div>
+</div>
+
+{% endblock %}
