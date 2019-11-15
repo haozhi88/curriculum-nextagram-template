@@ -22,8 +22,9 @@ Route functions
 @login_required
 def show_fan():
     if current_user.is_authenticated:
-        # todo
-        return render_template('relationship/show_fan.html')
+        user = User.get_or_none(User.id==current_user.id)
+        fans = User.select().join(Relationship, on=(Relationship.fan_id==User.id)).where(Relationship.idol_id==user.id)
+        return render_template('relationship/show_fan.html', fans=fans)
     else:
         flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
@@ -32,8 +33,9 @@ def show_fan():
 @login_required
 def show_idol():
     if current_user.is_authenticated:
-        # todo
-        return render_template('relationship/show_fan.html')
+        user = User.get_or_none(User.id==current_user.id)
+        idols = User.select().join(Relationship, on=(Relationship.idol_id==User.id)).where(Relationship.fan_id==user.id)
+        return render_template('relationship/show_idol.html', idols=idols)
     else:
         flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
