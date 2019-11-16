@@ -67,7 +67,6 @@ def show_profile(id_or_username, is_profile):
         pending_idols = User.select().join(Relationship, on=(Relationship.idol_id==User.id)).where(Relationship.fan_id==user.id, Relationship.status=="pending")
 
         # Check has follow
-        has_follow = False
         if current_user.is_authenticated:
             relationship = Relationship.get_or_none(Relationship.fan_id==current_user.id, Relationship.idol_id==user.id)
 
@@ -103,8 +102,18 @@ def show_myprofile():
 @users_blueprint.route('/', methods=["GET"])
 def index():
     if current_user.is_authenticated:
-        users = User.select().order_by(User.id.asc())
-        return render_template('users/index.html', users=users)
+        # Get profiles of other users
+        profiles = []
+        users = User.select().where(User.id!=current_user.id).order_by(User.id.asc())
+        for user in users:
+            images = user.images
+            relationship = Relationship.get_or_none(Relationship.fan_id==current_user.id, Relationship.idol_id==user.id)
+            profiles.append({
+                "user": user,
+                "images": images,
+                "relationship": relationship
+            })
+        return render_template('users/index.html', users=users, profiles=profiles)
     else:
         return redirect(url_for('sessions.new'))
 

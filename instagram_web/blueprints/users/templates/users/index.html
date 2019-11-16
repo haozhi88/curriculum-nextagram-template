@@ -1,7 +1,8 @@
 {% extends "_layout.html" %} {% block title %}Home{% endblock %} {% block header
 %} {% endblock %} {% block content %}
 <div class="container-fluid">
-  {% for user in users %} {% if user.id != current_user.id %}
+  {% for profile in profiles %} {% set user = profile['user'] %} {% set images =
+  profile['images'] %} {% set relationship = profile['relationship'] %}
   <div class="row mt-3" style="background-color: rgb(243, 240, 240)">
     <!-- Profile -->
     <div class="col-3 mt-3 d-flex justify-content-center align-items-center">
@@ -24,10 +25,11 @@
     </div>
 
     <!-- Details -->
-    <div class="col-9">
+    <div class="col-9 d-flex align-items-center">
       <div class="container">
         <div class="row">
-          {% if not user.private %} {% for image in user.images %}
+          {% if (not user.private) or (relationship and
+          relationship.status=="approve") %} {% for image in images %}
           <div class="col-4 mt-2 mb-2">
             <img
               src="{{ image.image_url }}"
@@ -37,7 +39,7 @@
             />
           </div>
           {%endfor%} {% else %}
-          <div class="row mt-5 justify-content-center align-items-center">
+          <div class="mt-5 ml-5 align-items-center">
             <p><i>This profile is private</i></p>
           </div>
           {% endif %}
@@ -45,6 +47,6 @@
       </div>
     </div>
   </div>
-  {% endif %} {% endfor %}
+  {% endfor %}
 </div>
 {% endblock %}

@@ -1,5 +1,5 @@
-{% extends "_layout.html" %} {% block title %}Followers{% endblock %} {% block
-header %} {% endblock %} {% block content %}
+{% extends "_layout.html" %} {% block title %}{{current_user.username}}
+followers{% endblock %} {% block header %} {% endblock %} {% block content %}
 <div class="container-fluid m-3">
   <div class="row"><h4>Followers ({{approve_fans|length}})</h4></div>
   {% for fan in approve_fans %}
