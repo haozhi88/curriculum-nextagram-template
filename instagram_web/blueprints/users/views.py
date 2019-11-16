@@ -71,13 +71,10 @@ def show_profile(id_or_username, is_profile):
             relationship = Relationship.get_or_none(Relationship.fan_id==current_user.id, Relationship.idol_id==user.id)
 
         # Get count of images, fans and idols
-        total_images = len(images)
-        total_fans = len(approve_fans) + len(pending_fans)
-        total_idols = len(approve_idols) + len(pending_idols)
         total = {
         "images": len(images),
-        "fans": len(approve_fans) + len(pending_fans),
-        "idols": len(approve_idols) + len(pending_idols)
+        "fans": len(approve_fans),
+        "idols": len(approve_idols)
         }
 
         return render_template('users/show.html', user=user, images=images, relationship=relationship, total=total)
@@ -201,8 +198,7 @@ def uploadimage(id):
         if file and allowed_file(file.filename):
             file.filename = secure_filename(file.filename)
             output   	  = upload_file_to_s3(file, S3_BUCKET)
-            if User.update(image_path = file.filename).where(User.id==user.id).execute():
-                # send_email(f"{user.username} has uploaded a new image {file.filename}")
+            if User.update(image_path = file.filename).where(User.id==user.id).execute():                
                 flash('Upload successful', 'alert alert-success')
                 return redirect(url_for('users.edit', id=id))
 

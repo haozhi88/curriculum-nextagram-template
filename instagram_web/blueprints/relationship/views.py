@@ -1,6 +1,7 @@
 from app import app
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_login import current_user, login_user, logout_user, login_required
+from helpers.sendgrid import *
 from models.user import User
 from models.relationship import Relationship
 
@@ -51,7 +52,9 @@ def follow(idol_id):
         if fan and idol:        
             relationship = Relationship(fan=fan, idol=idol)
             if not relationship.is_exist():
-                if not idol.private:
+                if idol.private:
+                    send_email(f"{fan.username} has followed you on nextagram! Approve follow request to allow profile view.")
+                else:
                     relationship.status = "approve"
                 if relationship.save():
                     flash('Follow profile successful', 'alert alert-success')
