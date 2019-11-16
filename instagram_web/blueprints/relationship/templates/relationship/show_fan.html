@@ -1,19 +1,35 @@
 {% extends "_layout.html" %} {% block title %}Followers{% endblock %} {% block
 header %} {% endblock %} {% block content %}
 <div class="container-fluid m-3">
-  <div class="row"><h4>Followers</h4></div>
-  {% for fan in fans %}
+  <div class="row"><h4>Followers ({{approve_fans|length}})</h4></div>
+  {% for fan in approve_fans %}
   <div class="row my-4">
     <div class="col-3">
       <div class="container">
         <div class="row">
           <div class="col-6 d-flex justify-content-around align-items-center">
-            <form action="{{ url_for('home') }}">
-              <button type="submit" class="btn btn-outline-primary">
+            <form
+              action="{{ url_for('relationship.approve', fan_id=fan.id) }}"
+              method="POST"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
+              <button type="submit" class="btn btn-outline-primary" disabled>
                 Approve
               </button>
             </form>
-            <form action="{{ url_for('home') }}">
+            <form
+              action="{{ url_for('relationship.block', fan_id=fan.id) }}"
+              method="POST"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
               <button type="submit" class="btn btn-outline-primary">
                 Block
               </button>
@@ -39,7 +55,58 @@ header %} {% endblock %} {% block content %}
   </div>
   {% endfor %}
   <hr />
-  <div class="row"><h4>Pending Requests</h4></div>
-  <div class="row"></div>
+  <div class="row"><h4>Pending Requests ({{pending_fans|length}})</h4></div>
+  {% for fan in pending_fans %}
+  <div class="row my-4">
+    <div class="col-3">
+      <div class="container">
+        <div class="row">
+          <div class="col-6 d-flex justify-content-around align-items-center">
+            <form
+              action="{{ url_for('relationship.approve', fan_id=fan.id) }}"
+              method="POST"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
+              <button type="submit" class="btn btn-outline-primary">
+                Approve
+              </button>
+            </form>
+            <form
+              action="{{ url_for('relationship.block', fan_id=fan.id) }}"
+              method="POST"
+            >
+              <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+              />
+              <button type="submit" class="btn btn-outline-primary">
+                Block
+              </button>
+            </form>
+          </div>
+          <div class="col d-flex justify-content-start align-items-center">
+            <img
+              src="{{ fan.profile_image_url }}"
+              alt="profile picture"
+              class="img-fluid rounded-circle"
+              style="width: 50px; height: 50px; object-fit: cover;"
+            />
+            <a
+              class="nav-link ml-2"
+              href="{{ url_for('users.show', id_or_username=fan.id) }}"
+            >
+              {{fan.username}}</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

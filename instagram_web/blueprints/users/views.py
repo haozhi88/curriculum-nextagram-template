@@ -6,6 +6,7 @@ from helpers.sendgrid import *
 from helpers.s3 import *
 from models.user import User
 from models.image import Image
+from models.relationship import Relationship
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 
@@ -56,7 +57,31 @@ def show_profile(id_or_username, is_profile):
     if user:
         # Get list of images
         images = user.images
-        return render_template('users/show.html', user=user, images=images)
+
+        # Get list of fans
+        approve_fans = User.select().join(Relationship, on=(Relationship.fan_id==User.id)).where(Relationship.idol_id==user.id, Relationship.status=="approve")
+        pending_fans = User.select().join(Relationship, on=(Relationship.fan_id==User.id)).where(Relationship.idol_id==user.id, Relationship.status=="pending")
+
+        # Get list of idols
+        approve_idols = User.select().join(Relationship, on=(Relationship.idol_id==User.id)).where(Relationship.fan_id==user.id, Relationship.status=="approve")
+        pending_idols = User.select().join(Relationship, on=(Relationship.idol_id==User.id)).where(Relationship.fan_id==user.id, Relationship.status=="pending")
+
+        # Check has follow
+        has_follow = False
+        if current_user.is_authenticated:
+            relationship = Relationship.get_or_none(Relationship.fan_id==current_user.id, Relationship.idol_id==user.id)
+
+        # Get count of images, fans and idols
+        total_images = len(images)
+        total_fans = len(approve_fans) + len(pending_fans)
+        total_idols = len(approve_idols) + len(pending_idols)
+        total = {
+        "images": len(images),
+        "fans": len(approve_fans) + len(pending_fans),
+        "idols": len(approve_idols) + len(pending_idols)
+        }
+
+        return render_template('users/show.html', user=user, images=images, relationship=relationship, total=total)
     else:
         flash('User not exist', 'alert alert-danger')
         return redirect(url_for('home'))  

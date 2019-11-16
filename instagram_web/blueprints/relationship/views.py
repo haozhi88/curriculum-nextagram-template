@@ -23,8 +23,9 @@ Route functions
 def show_fan():
     if current_user.is_authenticated:
         user = User.get_or_none(User.id==current_user.id)
-        fans = User.select().join(Relationship, on=(Relationship.fan_id==User.id)).where(Relationship.idol_id==user.id)
-        return render_template('relationship/show_fan.html', fans=fans)
+        approve_fans = User.select().join(Relationship, on=(Relationship.fan_id==User.id)).where(Relationship.idol_id==user.id, Relationship.status=="approve")
+        pending_fans = User.select().join(Relationship, on=(Relationship.fan_id==User.id)).where(Relationship.idol_id==user.id, Relationship.status=="pending")
+        return render_template('relationship/show_fan.html', approve_fans=approve_fans, pending_fans=pending_fans)
     else:
         flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
@@ -34,8 +35,9 @@ def show_fan():
 def show_idol():
     if current_user.is_authenticated:
         user = User.get_or_none(User.id==current_user.id)
-        idols = User.select().join(Relationship, on=(Relationship.idol_id==User.id)).where(Relationship.fan_id==user.id)
-        return render_template('relationship/show_idol.html', idols=idols)
+        approve_idols = User.select().join(Relationship, on=(Relationship.idol_id==User.id)).where(Relationship.fan_id==user.id, Relationship.status=="approve")
+        pending_idols = User.select().join(Relationship, on=(Relationship.idol_id==User.id)).where(Relationship.fan_id==user.id, Relationship.status=="pending")
+        return render_template('relationship/show_idol.html', approve_idols=approve_idols, pending_idols=pending_idols)
     else:
         flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
@@ -70,9 +72,8 @@ def unfollow(idol_id):
         fan = User.get_or_none(User.id==current_user.id)
         idol = User.get_or_none(User.id==idol_id)
         if fan and idol:
-            query = Relationship.select().where(Relationship.idol==idol, Relationship.fan==fan) 
-            if len(query):
-                relationship = query[0]
+            relationship = Relationship.get_or_none(Relationship.fan==fan, Relationship.idol==idol)
+            if relationship:
                 if relationship.delete_instance():
                     flash('Unfollow profile successful', 'alert alert-success')
                     return redirect(url_for('users.show', id_or_username=idol.username))
@@ -87,12 +88,46 @@ def unfollow(idol_id):
         flash('Log in required', 'alert alert-danger')
         return redirect(url_for('home'))
 
-@relationship_blueprint.route('/<id>/approve', methods=['POST'])
+@relationship_blueprint.route('/<fan_id>/approve', methods=['POST'])
 @login_required
-def approve(id):
-    pass
+def approve(fan_id):
+    if current_user.is_authenticated:
+        fan = User.get_or_none(User.id==fan_id)
+        idol = User.get_or_none(User.id==current_user.id)
+        if fan and idol:
+            relationship = Relationship.get_or_none(Relationship.fan==fan, Relationship.idol==idol)
+            if relationship and relationship.status == "pending":
+                if Relationship.update(status = "approve").where(Relationship.id==relationship.id).execute():
+                    flash('Approve follower successful', 'alert alert-success')
+                else:
+                    flash('Approve follower failed', 'alert alert-danger')
+            else:
+                flash('Profile has not been followed', 'alert alert-danger')
+        else:
+            flash('Unfollow profile failed', 'alert alert-danger')
+        return redirect(url_for('relationship.show_fan'))
+    else:
+        flash('Log in required', 'alert alert-danger')
+        return redirect(url_for('home'))
 
-@relationship_blueprint.route('/<id>/block', methods=['POST'])
+@relationship_blueprint.route('/<fan_id>/block', methods=['POST'])
 @login_required
-def block(id):
-    pass
+def block(fan_id):
+    if current_user.is_authenticated:
+        fan = User.get_or_none(User.id==fan_id)
+        idol = User.get_or_none(User.id==current_user.id)
+        if fan and idol:
+            relationship = Relationship.get_or_none(Relationship.fan==fan, Relationship.idol==idol)
+            if relationship:
+                if relationship.delete_instance():
+                    flash('Block profile successful', 'alert alert-success')
+                else:
+                    flash('Block profile failed', 'alert alert-danger')
+            else:
+                flash('Profile has not been followed', 'alert alert-danger')
+        else:
+            flash('Block profile failed', 'alert alert-danger')
+        return redirect(url_for('relationship.show_fan'))
+    else:
+        flash('Log in required', 'alert alert-danger')
+        return redirect(url_for('home'))

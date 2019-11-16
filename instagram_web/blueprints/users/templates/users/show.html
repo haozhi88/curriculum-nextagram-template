@@ -14,33 +14,59 @@ endblock %} {% block header %} {% endblock %} {% block content %}
             style="width: 300px; height: 300px; object-fit: cover;"
           />
         </div>
+        {% if current_user.is_authenticated and (current_user.id != user.id) %}
+        <div class="row justify-content-center">
+          {% if relationship %}
+          <form
+            action="{{ url_for('relationship.unfollow', idol_id=user.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" class="btn btn-outline-primary mt-3">
+              Unfollow
+            </button>
+          </form>
+          {% else %}
+          <form
+            action="{{ url_for('relationship.follow', idol_id=user.id) }}"
+            method="POST"
+          >
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <button type="submit" class="btn btn-outline-primary mt-3">
+              Follow
+            </button>
+          </form>
+          {% endif %}
+        </div>
+        {% endif %}
       </div>
     </div>
 
     <!-- Details -->
     <div class="col-9 mt-3">
       <div class="row">
-        <h3>Welcome to {{ user.username }}'s page!</h3>
+        <h2 class="ml-5">Welcome to {{ user.username }}'s page!</h2>
       </div>
-      <div class="row">
-        <form
-          action="{{ url_for('relationship.follow', idol_id=user.id) }}"
-          method="POST"
-        >
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          <button type="submit" class="btn btn-outline-primary mt-3">
-            Follow
-          </button>
-        </form>
-        <form
-          action="{{ url_for('relationship.unfollow', idol_id=user.id) }}"
-          method="POST"
-        >
-          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
-          <button type="submit" class="btn btn-outline-primary mt-3">
-            Unfollow
-          </button>
-        </form>
+      <div class="row mt-4">
+        <div class="col-2">
+          <div class="row justify-content-center">
+            <h3>{{total['images']}}</h3>
+          </div>
+          <div class="row justify-content-center"><h6>Posts</h6></div>
+        </div>
+        <div class="col-2">
+          <div class="row justify-content-center">
+            <h3>{{total['fans']}}</h3>
+          </div>
+          <div class="row justify-content-center"><h6>Followers</h6></div>
+        </div>
+        <div class="col-2">
+          <div class="row justify-content-center">
+            <h3>{{total['idols']}}</h3>
+          </div>
+          <div class="row justify-content-center"><h6>Following</h6></div>
+        </div>
+        <div class="col"></div>
       </div>
     </div>
   </div>
@@ -48,7 +74,7 @@ endblock %} {% block header %} {% endblock %} {% block content %}
   <hr />
 
   {% if (not user.private) or (current_user.is_authenticated and
-  (current_user.id == user.id)) %}
+  (current_user.id == user.id)) or (relationship.status == "approve") %}
   <!-- User images -->
   <div class="row mt-2">
     {% for image in images %}
