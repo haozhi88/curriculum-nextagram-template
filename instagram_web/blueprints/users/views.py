@@ -116,7 +116,7 @@ def index():
 
         # Method 2: Without N+1 issue
         profiles_wo_np1 = []
-        users_wo_np1 = User.select().prefetch(Image) # same effect as Image.select().where(Image.user<<users)
+        users_wo_np1 = User.select().where(User.id!=current_user.id).order_by(User.id.asc()).prefetch(Image) # same effect as Image.select().where(Image.user<<users)
         for user in users_wo_np1:
             relationship = Relationship.get_or_none(Relationship.fan_id==current_user.id, Relationship.idol_id==user.id)
             profiles_wo_np1.append({
