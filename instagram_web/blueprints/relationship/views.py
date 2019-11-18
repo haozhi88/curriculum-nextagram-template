@@ -53,7 +53,7 @@ def follow(idol_id):
             relationship = Relationship(fan=fan, idol=idol)
             if not relationship.is_exist():
                 if idol.private:
-                    send_email(f"{fan.username} has followed you on nextagram! Approve follow request to allow profile view.")
+                    # send_email(f"{fan.username} has followed you on nextagram! Approve follow request to allow profile view.")
                 else:
                     relationship.status = "approve"
                 if relationship.save():
