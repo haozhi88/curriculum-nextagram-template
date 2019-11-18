@@ -100,17 +100,31 @@ def show_myprofile():
 def index():
     if current_user.is_authenticated:
         # Get profiles of other users
-        profiles = []
-        users = User.select().where(User.id!=current_user.id).order_by(User.id.asc())
-        for user in users:
-            images = user.images
+
+        # Method 1: With N+1 issue
+        # profiles = []
+        # users = User.select().where(User.id!=current_user.id).order_by(User.id.asc())
+        # for user in users:
+        #     images = user.images
+        #     relationship = Relationship.get_or_none(Relationship.fan_id==current_user.id, Relationship.idol_id==user.id)
+        #     profiles.append({
+        #         "user": user,
+        #         "images": images,
+        #         "relationship": relationship
+        #     })
+        # return render_template('users/index.html', users=users, profiles=profiles)
+
+        # Method 2: Without N+1 issue
+        profiles_wo_np1 = []
+        users_wo_np1 = User.select().prefetch(Image) # same effect as Image.select().where(Image.user<<users)
+        for user in users_wo_np1:
             relationship = Relationship.get_or_none(Relationship.fan_id==current_user.id, Relationship.idol_id==user.id)
-            profiles.append({
+            profiles_wo_np1.append({
                 "user": user,
-                "images": images,
+                "images": user.images,
                 "relationship": relationship
             })
-        return render_template('users/index.html', users=users, profiles=profiles)
+        return render_template('users/index.html', users=users_wo_np1, profiles=profiles_wo_np1)
     else:
         return redirect(url_for('sessions.new'))
 
